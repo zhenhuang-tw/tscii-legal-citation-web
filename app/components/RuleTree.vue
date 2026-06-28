@@ -1,11 +1,9 @@
 <template>
-  <details class="rule-tree-container">
+  <!-- Container node: has children, wrap in collapsible <details> -->
+  <details v-if="rule.rule" class="rule-tree-container">
     <summary>
       <span class="rule-code">{{ rule.code }}</span>
       <span v-if="rule.name" class="rule-name">{{ rule.name }}</span>
-      <span v-else-if="rule.description" class="rule-desc">
-        {{ Array.isArray(rule.description) ? rule.description[0] : rule.description }}
-      </span>
     </summary>
 
     <!-- Description for container nodes -->
@@ -18,20 +16,32 @@
       <template v-else>{{ rule.description }}</template>
     </p>
 
-    <!-- Recurse into children -->
-    <template v-if="rule.rule">
-      <RuleTree
-        v-for="child in rule.rule"
-        :key="child.code"
-        :rule="child"
-      />
-    </template>
-
-    <!-- Leaf node: no children, render as CitationCard -->
-    <template v-else>
-      <CitationCard :rule="rule" />
-    </template>
+    <RuleTree
+      v-for="child in rule.rule"
+      :key="child.code"
+      :rule="child"
+    />
   </details>
+
+  <!-- Leaf: has format or example or multipleTypeExample → CitationCard -->
+  <CitationCard
+    v-else-if="
+      rule.format !== undefined ||
+      rule.example !== undefined ||
+      (rule.multipleTypeExample && rule.multipleTypeExample.length > 0)
+    "
+    :rule="rule"
+  />
+
+  <!-- Pure description rule: no name, no children, no examples → flat <p> -->
+  <p v-else-if="rule.description">
+    <template v-if="Array.isArray(rule.description)">
+      <template v-for="(line, i) in rule.description" :key="i">
+        {{ line }}<br v-if="i < rule.description.length - 1" />
+      </template>
+    </template>
+    <template v-else>{{ rule.description }}</template>
+  </p>
 </template>
 
 <script setup lang="ts">

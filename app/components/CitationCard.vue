@@ -1,7 +1,7 @@
 <template>
   <article class="citation-card">
     <header>
-      <h3>{{ rule.name || rule.code }}</h3>
+      <h3>{{ rule.code }} {{ rule.name }}</h3>
     </header>
 
     <!-- Description (official format) -->
@@ -39,8 +39,9 @@
         </ul>
         <!-- Single string example -->
         <ul v-else-if="typeof rule.example === 'string'">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <li><span v-html="rule.example" /></li>
+          <li>
+            <span v-html="rule.example" />
+          </li>
         </ul>
         <!-- Object examples (e.g., { "已出版博士論文": "...", "已出版有序言": "..." }) -->
         <template v-else-if="typeof rule.example === 'object'">
@@ -63,7 +64,7 @@
 
     <!-- Multiple type examples -->
     <section v-if="rule.multipleTypeExample && rule.multipleTypeExample.length > 0">
-      <details>
+      <details open>
         <summary>範例</summary>
         <template v-for="(group, gi) in rule.multipleTypeExample" :key="gi">
           <h4>{{ group.type }}</h4>
