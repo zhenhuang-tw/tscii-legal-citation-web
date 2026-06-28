@@ -4,7 +4,6 @@
       <h3>{{ rule.code }} {{ rule.name }}</h3>
     </header>
 
-    <!-- Description (official format) -->
     <p v-if="rule.description">
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
@@ -18,7 +17,6 @@
       </template>
     </p>
 
-    <!-- Format template (only when description is absent) -->
     <blockquote v-if="rule.format && !rule.description">
       <template v-if="Array.isArray(rule.format)">
         <p v-for="(f, i) in rule.format" :key="i">
@@ -30,53 +28,38 @@
       </template>
     </blockquote>
 
-    <!-- Examples: rule.example only (not multipleTypeExample) -->
-    <section v-if="rule.example !== undefined">
-      <h4>範例</h4>
-      <ul v-if="Array.isArray(rule.example)">
-        <li v-for="(ex, i) in rule.example" :key="i">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="ex" />
-        </li>
-      </ul>
-      <ul v-else-if="typeof rule.example === 'string'">
-        <li>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.example" />
-        </li>
-      </ul>
-      <template v-else-if="typeof rule.example === 'object'">
-        <div v-for="(val, key) in rule.example" :key="key">
-          <strong>{{ key }}</strong>
-          <blockquote v-if="typeof val === 'string'">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="val" />
-          </blockquote>
-          <ul v-else-if="Array.isArray(val)">
-            <li v-for="(ex, j) in val" :key="j">
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <span v-html="ex" />
-            </li>
-          </ul>
-        </div>
-      </template>
+    <!-- Examples: string / string[] -->
+    <section v-if="typeof rule.example === 'string' || Array.isArray(rule.example)">
+      <!--<h4>範例</h4>-->
+      <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="ex" />
+      </blockquote>
     </section>
 
-    <!-- Multiple type examples (separate heading) -->
+    <!-- Examples: Record<string, string | string[]> -->
+    <section v-else-if="typeof rule.example === 'object'">
+      <h4>範例</h4>
+      <div v-for="(val, key) in rule.example" :key="key">
+        <strong>{{ key }}</strong>
+        <blockquote v-for="(ex, j) in asArray(val)" :key="j">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="ex" />
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- Multiple type examples -->
     <section v-if="rule.multipleTypeExample && rule.multipleTypeExample.length > 0">
       <h4>範例</h4>
       <template v-for="(group, gi) in rule.multipleTypeExample" :key="gi">
         <h5>{{ group.type }}</h5>
-        <ul>
-          <li v-for="(ex, ei) in group.example" :key="ei">{{ ex }}</li>
-        </ul>
+        <blockquote v-for="(ex, ei) in group.example" :key="ei">{{ ex }}</blockquote>
       </template>
     </section>
 
-    <!-- Sub-rules rendered inline inside this card -->
     <slot />
 
-    <!-- Web note -->
     <footer v-if="rule.webNote">
       <small>📝 {{ rule.webNote }}</small>
     </footer>
@@ -87,4 +70,8 @@
 import type { CitationRule } from '~/types/citation'
 
 defineProps<{ rule: CitationRule }>()
+
+function asArray(val: string | string[]): string[] {
+  return Array.isArray(val) ? val : [val]
+}
 </script>

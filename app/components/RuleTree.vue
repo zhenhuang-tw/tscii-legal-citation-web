@@ -62,29 +62,17 @@
         </template>
       </blockquote>
       <!-- Inline examples -->
-      <ul v-if="Array.isArray(rule.example)">
-        <li v-for="(ex, i) in rule.example" :key="i">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="ex" />
-        </li>
-      </ul>
-      <blockquote v-else-if="typeof rule.example === 'string'">
+      <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="rule.example" />
+        <span v-html="ex" />
       </blockquote>
-      <template v-else-if="typeof rule.example === 'object'">
-        <div v-for="(val, key) in rule.example" :key="key">
+      <template v-if="typeof rule.example === 'object'">
+        <div v-for="(val, key) in (rule.example as Record<string, string | string[]>)" :key="key">
           <strong>{{ key }}</strong>
-          <blockquote v-if="typeof val === 'string'">
+          <blockquote v-for="(ex, j) in asArray(val)" :key="j">
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="val" />
+            <span v-html="ex" />
           </blockquote>
-          <ul v-else-if="Array.isArray(val)">
-            <li v-for="(ex, j) in val" :key="j">
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <span v-html="ex" />
-            </li>
-          </ul>
         </div>
       </template>
     </div>
@@ -170,29 +158,17 @@
         </template>
       </blockquote>
       <!-- Inline examples -->
-      <ul v-if="Array.isArray(rule.example)">
-        <li v-for="(ex, i) in rule.example" :key="i">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="ex" />
-        </li>
-      </ul>
-      <blockquote v-else-if="typeof rule.example === 'string'">
+      <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="rule.example" />
+        <span v-html="ex" />
       </blockquote>
-      <template v-else-if="typeof rule.example === 'object'">
-        <div v-for="(val, key) in rule.example" :key="key">
+      <template v-if="typeof rule.example === 'object'">
+        <div v-for="(val, key) in (rule.example as Record<string, string | string[]>)" :key="key">
           <strong>{{ key }}</strong>
-          <blockquote v-if="typeof val === 'string'">
+          <blockquote v-for="(ex, j) in asArray(val)" :key="j">
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="val" />
+            <span v-html="ex" />
           </blockquote>
-          <ul v-else-if="Array.isArray(val)">
-            <li v-for="(ex, j) in val" :key="j">
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <span v-html="ex" />
-            </li>
-          </ul>
         </div>
       </template>
     </details>
@@ -249,5 +225,9 @@ function hasLeafContent(rule: CitationRule): boolean {
 
 function anchorId(code: string): string {
   return code.replace(/\.$/, '').replace(/\./g, '-')
+}
+
+function asArray(val: string | string[]): string[] {
+  return Array.isArray(val) ? val : [val]
 }
 </script>

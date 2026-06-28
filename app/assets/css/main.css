@@ -178,9 +178,12 @@ article.citation-card blockquote {
   margin: 0.5rem 0;
   padding: 0.5rem 1rem;
   background: var(--pico-code-background-color);
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.9rem;
+  border-left: 3px solid var(--pico-secondary-border);
+  border-radius: 0 4px 4px 0;
+}
+
+blockquote + blockquote {
+  margin-top: 0.25rem;
 }
 
 /* ---- 分類區塊 ---- */
