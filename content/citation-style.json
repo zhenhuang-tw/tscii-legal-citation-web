@@ -110,7 +110,7 @@
           "code": "2.5",
           "name": "法院裁判",
           "description": [
-            "完整表示，是否特別註明該裁判為「民事裁定、民事判決、刑事裁定或刑事判決」等，請以司法院裁判書查詢系統（https://judgment.judicial.gov.tw/FJUD/default_AD.aspx）為準。",
+            "完整表示，是否特別註明該裁判為「民事裁定、民事判決、刑事裁定或刑事判決」等，請以司法院裁判書查詢系統（<a href=\"https://judgment.judicial.gov.tw/FJUD/default_AD.aspx\" target=\"_blank\" rel=\"noopener\">https://judgment.judicial.gov.tw/FJUD/default_AD.aspx</a>）為準。",
             "於同一註腳引用複數判決時，如該等判決由相同法院作成，得僅就第一則判決指明法院名稱及審級，以期精簡；若該等判決係由不同法院作成，則不得省略法院名稱及審級。"
           ],
           "multipleTypeExample": [
@@ -902,11 +902,11 @@
           "rule": [
             {
               "code": "6.1.1",
-              "description": "法令規章引用方式、書刊名稱略語、以及不同性質資料的分隔符號 (séparateur)等部分，本小組建議原則參照法國出版者協會(SNE)編纂的法律參考資訊編輯指南(Ref-Lex)（最近一次更新為2026年）。Syndicat national de l'Edition, REFLEX: Guide de rédaction des références juridiques, 30 mars 2026."
+              "description": "法令規章引用方式、書刊名稱略語、以及不同性質資料的分隔符號 (séparateur)等部分，本小組建議原則參照法國出版者協會(SNE)編纂的法律參考資訊編輯指南(Ref-Lex)（最近一次更新為2026年）。Syndicat national de l’Edition, REFLEX: Guide de rédaction des références juridiques, 30 mars 2026."
             },
             {
               "code": "6.1.2",
-              "description": "法文格式部分，大寫字不加重音符號（使用l'Etat 而非l'État；Age 而非 Âge）。序數可上標或不上標，例如1er, 1er, 3ème, 3ème, 5e, 5e。"
+              "description": "法文格式部分，大寫字不加重音符號（使用l’Etat 而非l’État；Age 而非 Âge）。序數可上標或不上標，例如1<sup>er</sup>, 1er, 3<sup>ème</sup>, 3ème, 5<sup>e</sup>, 5e。"
             },
             {
               "code": "6.1.3",
@@ -991,7 +991,7 @@
         {
           "code": "6.3",
           "name": "公報",
-          "description": "涉及部會向國會答詢時使用JOAN/JO Sénat。號次以2015年以前用編號或頁標示。",
+          "description": "JO/涉及部會向國會答詢時 JOAN/ JO Sénat| 號次 [n° NNNN]|, 日月年, 編號或頁（2015 年以前）",
           "format": "{$gazetteAbbrev} [n° {$number}], {$date}, {$pageOrTextNumber}.",
           "example": [
             "JO n° 0116, 21 mai 2015, texte n° 1",
@@ -1004,7 +1004,8 @@
         {
           "code": "6.4",
           "name": "未刊行於公報的提案",
-          "format": "Projet de loi/Proposition de loi {$chamber}, {$sessionYears}, {$title}, {$url}",
+          "description": "Projet de loi/Proposition de loi| AN/ Sénat|, 會期 YYYY-YYYY|, 名稱|, 連結",
+          "format": "{$type} de loi {$chamber}, {$sessionYears}, {$title}, {$url}",
           "example": "Proposition de loi Sénat n° 680, 2014-2015, tendant à garantir le respect du domicile, https://www.senat.fr/leg/ppl14-680.html"
         },
         {
