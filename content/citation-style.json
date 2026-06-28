@@ -160,12 +160,14 @@
                 {
                   "code": "2.7.2.1",
                   "name": "編者同作者",
+                  "description": "作者，篇名，收於：書名，頁碼，出版年。",
                   "format": "{$author}，{$title}，收於：{$bookTitle}，頁{$page}，{$year}年。",
                   "example": "王鵬翔，規則是法律推理的排它性理由嗎？，收於：2008法律思想與社會變遷，頁353-379，2008年。"
                 },
                 {
                   "code": "2.7.2.2",
                   "name": "編者非作者",
+                  "description": "作者，篇名，收於：編者編，書名，頁碼，出版年。",
                   "format": "{$author}，{$title}，收於：{$editor}編，{$bookTitle}，頁{$page}，{$year}年。",
                   "example": "林子儀，言論自由的限制與雙軌理論，收於：李鴻禧教授六秩華誕祝賀論文集編輯委員會編，現代國家與憲法—李鴻禧教授六秩華誕祝賀論文集，頁700，1997年。"
                 }
@@ -192,18 +194,21 @@
                 {
                   "code": "2.8.2.1",
                   "name": "有編者但無篇名（如教科書、專論等）",
+                  "description": "編者，書名，版次（初版無須註明），頁碼（作者執筆），出版年。",
                   "format": "{$editor}，{$bookTitle}，{$edition}（初版無須註明），頁{$page}（{$author}執筆），{$year}年。",
                   "example": "臺灣勞動法學會，勞動基準法釋義──施行40年之回顧與展望，頁642-657（林佳和執筆），2024年。"
                 },
                 {
                   "code": "2.8.2.2",
                   "name": "一位作者，並有續著/修訂/校訂者時",
+                  "description": "作者1（作者2續著［或其他書籍使用之動詞］），書名，版次（初版無須註明），頁碼，出版年。",
                   "format": "{$author1}（{$author2}續著［或其他書籍使用之動詞］），{$bookTitle}，{$edition}（初版無須註明），頁{$page}，{$year}年。",
                   "example": "邱聰智（姚志明校訂），新訂債法各論（上），頁23-30，2008年。"
                 },
                 {
                   "code": "2.8.2.3",
                   "name": "多人列為作者時",
+                  "description": "作者1、作者2，書名，版次，頁碼，出版年。",
                   "format": "{$author1}、{$author2}，{$bookTitle}，{$edition}，頁{$page}，{$year}年。",
                   "example": "黃東熊、吳景芳，刑事訴訟法論（上），頁70-82，2004年。"
                 }
@@ -228,7 +233,7 @@
         {
           "code": "2.11",
           "name": "翻譯書或文章",
-          "description": "作者姓名優先以原文標示，如出版社僅提供譯名，則可以譯名標示。",
+          "description": "作者（譯者譯／修訂者修訂），書名，頁碼，出版年。作者姓名優先以原文標示，如出版社僅提供譯名，則可以譯名標示。",
           "format": "{$author}（{$translator}譯／{$reviser}修訂），{$bookTitle}，頁{$page}，{$year}年。",
           "example": "Richard A. Epstein（簡資修譯），自由社會的原則，頁35-40，2003年。"
         },
@@ -266,8 +271,8 @@
         {
           "code": "2.14",
           "name": "前註",
-          "description": "如註X中包含兩篇以上文章，則應於作者後標註指定篇名（如第三例）。",
-          "format": "{$author}，註{$noteNumber}，頁{$page}（若引註頁碼與註X不同，則應註明）。",
+          "description": "作者，註X，頁碼（若引註頁碼與註X不同，則應註明）。如註X中包含兩篇以上文章，則應於作者後標註指定篇名。",
+          "format": "{$author}，註{$noteNumber}，頁{$page}。",
           "example": [
             "湯德宗，註1。",
             "湯德宗，註1，頁41。",
@@ -329,7 +334,7 @@
         {
           "code": "3.2",
           "name": "法條和判決",
-          "description": "超國家層級與國際公約、條約等規範文件依該組織／該機關所提供之引註格式。判決於本文及註腳引用時，均不須使用斜體。",
+          "description": "依該國／該區域／該組織／該機關所提供之引註格式。但應包含必要之資訊。超國家層級與國際公約、條約等規範文件依該組織／該機關所提供之引註格式。判決於本文及註腳引用時，均不須使用斜體。",
           "format": "依該國／該區域／該組織／該機關所提供之引註格式。但應包含必要之資訊。",
           "example": [
             "US: 28 U.S.C. § 1291 (2012).",
@@ -347,9 +352,7 @@
             {
               "code": "3.3.1",
               "name": "一位作者",
-              "description": [
-                "複數編者之引註方式同作者。初版書籍無須註明版次。"
-              ],
+              "description": "作者姓名[小型大寫字] , 書名[小型大寫字]  引用頁數 (版次 出版年份).",
               "format": "<span class=\"smallcaps\">{$author}</span>, <span class=\"smallcaps\">{$title}</span> {$page} ({$edition} {$year}).",
               "example": [
                 "<span class=\"smallcaps\">Mary Anne Franks, Fearless Speech: Breaking Free from the First Amendment</span> (2024).",
@@ -359,17 +362,15 @@
             {
               "code": "3.3.2",
               "name": "二位作者",
-              "description": [
-                "複數編者之引註方式同作者。初版書籍無須註明版次。"
-              ],
-              "format": "<span class=\"smallcaps\">{$authorA}</span> &amp; <span class=\"smallcaps\">{$authorB}</span>, <span class=\"smallcaps\">{$title}</span> {$page} ({$edition} {$year}).",
-              "example": "（格式同一位作者，第二位作者前以「&」連接，全部作者姓名與書名均使用小型大寫字）"
+              "description": "作者姓名A[小型大寫字]  & 作者姓名B[小型大寫字] , 書名[小型大寫字] 引用頁數 (版次 出版年份).",
+              "format": "<span class=\"smallcaps\">{$authorA}</span> &amp; <span class=\"smallcaps\">{$authorB}</span>, <span class=\"smallcaps\">{$title}</span> {$page} ({$edition} {$year})."
             },
             {
               "code": "3.3.3",
               "name": "三位以上作者（以下兩種引用方式擇一）",
               "description": [
-                "複數編者之引註方式同作者。初版書籍無須註明版次。"
+                "作者姓名[小型大寫字] et al.[小型大寫字] , 書名[小型大寫字] 引用頁數 (版次 出版年份).",
+                "作者姓名A[小型大寫字] , 作者姓名B[小型大寫字]  & 作者姓名C[小型大寫字] , 書名[小型大寫字] 引用頁數 (版次 出版年份)."
               ],
               "format": [
                 "<span class=\"smallcaps\">{$author}</span> <span class=\"smallcaps\">et al.</span>, <span class=\"smallcaps\">{$title}</span> {$page} ({$edition} {$year}).",
