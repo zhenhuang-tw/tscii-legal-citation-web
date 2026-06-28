@@ -1,85 +1,32 @@
 <template>
-  <!-- ===== DESKTOP: no collapse ===== -->
-  <template v-if="!isMobile">
-    <!-- x.x rule (non-pure-description) → CitationCard; sub-rules in slot -->
-    <div v-if="isXx(rule.code) && !insideCard && !isPureDescription(rule)" :id="anchorId(rule.code)">
-      <CitationCard :rule="rule">
-        <RuleTree
-          v-for="child in rule.rule"
-          :key="child.code"
-          :rule="child"
-          :inside-card="true"
-        />
-      </CitationCard>
-    </div>
-
-    <!-- Non-x.x container, pure-desc x.x, or inside-card: render children -->
-    <div v-else-if="rule.rule" :id="anchorId(rule.code)" data-rule-tree>
-      <h3 v-if="!insideCard">{{ rule.code }} {{ rule.name }}</h3>
-      <p v-if="rule.description && rule.rule">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
-      </p>
+  <!-- x.x rule (non-pure-description) → CitationCard; sub-rules in slot -->
+  <component
+    :is="isMobile ? 'details' : 'div'"
+    v-if="isXx(rule.code) && !insideCard && !isPureDescription(rule)"
+    :id="anchorId(rule.code)"
+    data-rule-tree
+  >
+    <summary v-if="isMobile">{{ rule.code }} {{ rule.name }}</summary>
+    <CitationCard :rule="rule">
       <RuleTree
         v-for="child in rule.rule"
         :key="child.code"
         :rule="child"
-        :inside-card="insideCard"
+        :inside-card="true"
       />
-    </div>
+    </CitationCard>
+  </component>
 
-    <!-- Inside a card or non-x.x: inline leaf content -->
-    <div v-else-if="hasLeafContent(rule)" :id="anchorId(rule.code)">
-      <h4 v-if="rule.name">{{ rule.code }} {{ rule.name }}</h4>
-      <p v-if="rule.description">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
-      </p>
-      <blockquote v-if="rule.format && !rule.description">
-        <template v-if="Array.isArray(rule.format)">
-          <p v-for="(f, i) in rule.format" :key="i">
-            <CitationFormatBlock :format="f" />
-          </p>
-        </template>
-        <template v-else>
-          <CitationFormatBlock :format="rule.format" />
-        </template>
-      </blockquote>
-      <!-- Inline examples -->
-      <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="ex" />
-      </blockquote>
-      <template v-if="typeof rule.example === 'object'">
-        <div v-for="(val, key) in (rule.example as Record<string, string | string[]>)" :key="key">
-          <strong>{{ key }}</strong>
-          <blockquote v-for="(ex, j) in asArray(val)" :key="j">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="ex" />
-          </blockquote>
-        </div>
-      </template>
-    </div>
-
-    <!-- Pure description -->
-    <p v-else-if="rule.description" :id="anchorId(rule.code)">
-      {{ rule.code }}
+  <!-- Non-x.x container, pure-desc x.x, or inside-card: render children -->
+  <component
+    :is="isMobile ? 'details' : 'div'"
+    v-else-if="rule.rule"
+    :id="anchorId(rule.code)"
+    data-rule-tree
+  >
+    <summary v-if="isMobile">{{ rule.code }} {{ rule.name }}</summary>
+    <h3 v-if="rule.name && !isMobile">{{ rule.code }} {{ rule.name }}</h3>
+    <p v-if="rule.description && rule.rule">
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -91,91 +38,24 @@
         <span v-html="rule.description" />
       </template>
     </p>
-  </template>
+    <RuleTree
+      v-for="child in rule.rule"
+      :key="child.code"
+      :rule="child"
+      :inside-card="insideCard"
+    />
+  </component>
 
-  <!-- ===== MOBILE: collapsible ===== -->
-  <template v-else>
-    <!-- x.x rule (non-pure-description) → CitationCard in details -->
-    <details v-if="isXx(rule.code) && !insideCard && !isPureDescription(rule)" :id="anchorId(rule.code)">
-      <summary>{{ rule.code }} {{ rule.name }}</summary>
-      <CitationCard :rule="rule">
-        <RuleTree
-          v-for="child in rule.rule"
-          :key="child.code"
-          :rule="child"
-          :inside-card="true"
-        />
-      </CitationCard>
-    </details>
-
-    <!-- Non-x.x container, pure-desc x.x, or inside-card: render children in details -->
-    <details v-else-if="rule.rule" :id="anchorId(rule.code)" data-rule-tree>
-      <summary>{{ rule.code }} {{ rule.name }}</summary>
-      <p v-if="rule.description && rule.rule">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
-      </p>
-      <RuleTree
-        v-for="child in rule.rule"
-        :key="child.code"
-        :rule="child"
-        :inside-card="insideCard"
-      />
-    </details>
-
-    <!-- Inside a card or non-x.x: inline leaf content in details -->
-    <details v-else-if="hasLeafContent(rule)" :id="anchorId(rule.code)">
-      <summary>{{ rule.code }} {{ rule.name || '' }}</summary>
-      <h4 v-if="rule.name">{{ rule.code }} {{ rule.name }}</h4>
-      <p v-if="rule.description">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
-      </p>
-      <blockquote v-if="rule.format && !rule.description">
-        <template v-if="Array.isArray(rule.format)">
-          <p v-for="(f, i) in rule.format" :key="i">
-            <CitationFormatBlock :format="f" />
-          </p>
-        </template>
-        <template v-else>
-          <CitationFormatBlock :format="rule.format" />
-        </template>
-      </blockquote>
-      <!-- Inline examples -->
-      <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="ex" />
-      </blockquote>
-      <template v-if="typeof rule.example === 'object'">
-        <div v-for="(val, key) in (rule.example as Record<string, string | string[]>)" :key="key">
-          <strong>{{ key }}</strong>
-          <blockquote v-for="(ex, j) in asArray(val)" :key="j">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="ex" />
-          </blockquote>
-        </div>
-      </template>
-    </details>
-
-    <!-- Pure description -->
-    <p v-else-if="rule.description" :id="anchorId(rule.code)">
-      {{ rule.code }}
+  <!-- Inside a card or non-x.x: inline leaf content -->
+  <component
+    :is="isMobile ? 'details' : 'div'"
+    v-else-if="hasLeafContent(rule)"
+    :id="anchorId(rule.code)"
+    data-rule-leaf
+  >
+    <summary v-if="isMobile">{{ rule.code }} {{ rule.name || '' }}</summary>
+    <h4 v-if="rule.name">{{ rule.code }} {{ rule.name }}</h4>
+    <p v-if="rule.description">
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -187,7 +67,45 @@
         <span v-html="rule.description" />
       </template>
     </p>
-  </template>
+    <blockquote v-if="rule.format && !rule.description">
+      <template v-if="Array.isArray(rule.format)">
+        <p v-for="(f, i) in rule.format" :key="i">
+          <CitationFormatBlock :format="f" />
+        </p>
+      </template>
+      <template v-else>
+        <CitationFormatBlock :format="rule.format" />
+      </template>
+    </blockquote>
+    <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <span v-html="ex" />
+    </blockquote>
+    <template v-if="typeof rule.example === 'object'">
+      <div v-for="(val, key) in (rule.example as Record<string, string | string[]>)" :key="key">
+        <strong>{{ key }}</strong>
+        <blockquote v-for="(ex, j) in asArray(val)" :key="j">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="ex" />
+        </blockquote>
+      </div>
+    </template>
+  </component>
+
+  <!-- Pure description -->
+  <p v-else-if="rule.description" :id="anchorId(rule.code)">
+    {{ rule.code }}
+    <template v-if="Array.isArray(rule.description)">
+      <template v-for="(line, i) in rule.description" :key="i">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="line" /><br v-if="i < rule.description.length - 1" />
+      </template>
+    </template>
+    <template v-else>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <span v-html="rule.description" />
+    </template>
+  </p>
 </template>
 
 <script setup lang="ts">

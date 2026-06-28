@@ -51,6 +51,12 @@ div[data-rule-tree] > h3 {
   margin-bottom: 0.5rem;
 }
 
+/* Desktop: leaf containers have no special styling */
+div[data-rule-leaf] {
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile: details wrapper (collapsible) */
 details[data-rule-tree] {
   margin-bottom: 0.75rem;
   border: 1px solid var(--pico-muted-border-color);
@@ -60,25 +66,18 @@ details[data-rule-tree] {
 
 details[data-rule-tree] > summary {
   cursor: pointer;
-  font-size: var(--pico-font-size, 1rem);
   font-weight: 700;
   padding: 0.25rem 0;
   color: var(--pico-h3-color);
 }
 
-details[data-rule-tree] > summary::marker {
-  font-size: 1rem;
-}
-
-details[data-rule-tree][open] > summary {
+details[data-rule-leaf] {
   margin-bottom: 0.5rem;
 }
 
-/* Mobile: generic details inside citation content */
-@media (max-width: 1023px) {
-  .citation-category details {
-    margin-bottom: 0.5rem;
-  }
+details[data-rule-leaf] > summary {
+  cursor: pointer;
+  font-weight: 600;
 }
 
 /* ---- 語言篩選工具列 ---- */
