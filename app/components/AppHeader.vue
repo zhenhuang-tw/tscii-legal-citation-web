@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header data-sticky>
     <nav>
       <ul>
         <li><strong> TSCII 法律學一級期刊統一引註格式</strong><small>（非官方）</small></li>

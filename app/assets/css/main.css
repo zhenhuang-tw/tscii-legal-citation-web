@@ -4,8 +4,20 @@
    ======================================== */
 
 body {
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* ---- AppHeader sticky ---- */
+header[data-sticky] {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--pico-background-color);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  margin-bottom: 1rem;
 }
 
 /* ---- 非官方聲明 banner ---- */
@@ -68,20 +80,36 @@ fieldset.language-filter legend {
   padding: 0 0.5rem;
 }
 
-/* ---- 大綱側欄（桌面版） ---- */
+/* ---- 大綱側欄 ---- */
+.toc-desktop {
+  display: none;
+}
+
+.toc-mobile {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
 @media (min-width: 1024px) {
   .citations-layout {
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 220px 1fr;
     gap: 2rem;
-    align-items: start;
+  }
+
+  .toc-desktop {
+    display: block;
+  }
+
+  .toc-mobile {
+    display: none;
   }
 }
 
 nav[aria-label='頁面大綱'] {
   position: sticky;
-  top: 1rem;
-  max-height: calc(100vh - 2rem);
+  top: 4.5rem;
+  max-height: calc(100vh - 5rem);
   overflow-y: auto;
   font-size: 0.875rem;
   padding: 0.5rem 0;
@@ -108,12 +136,7 @@ nav[aria-label='頁面大綱'] a:hover {
   background: var(--pico-muted-border-color);
 }
 
-/* 大綱：分類層級加粗 */
-nav[aria-label='頁面大綱'] li.toc-category > a {
-  font-weight: 700;
-}
-
-/* 大綱行動版折疊 */
+/* 大綱行動版：取消 sticky */
 @media (max-width: 1023px) {
   .citations-layout {
     display: block;

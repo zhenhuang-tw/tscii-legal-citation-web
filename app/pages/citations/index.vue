@@ -17,14 +17,16 @@
 
     <!-- TOC + Content layout -->
     <div class="citations-layout">
-      <!-- Desktop TOC sidebar; mobile: collapsible -->
-      <details class="toc-mobile" v-if="isMobile">
+      <!-- Desktop TOC: visible sidebar -->
+      <div class="toc-desktop">
+        <CitationToc :rules="categories" :language-filter="filter" />
+      </div>
+
+      <!-- Mobile TOC: details/summary wrapper -->
+      <details class="toc-mobile">
         <summary>目錄</summary>
         <CitationToc :rules="categories" :language-filter="filter" />
       </details>
-      <div class="toc-desktop" v-else>
-        <CitationToc :rules="categories" :language-filter="filter" />
-      </div>
 
       <!-- Main content -->
       <div>
@@ -37,13 +39,11 @@
         >
           <h2>{{ cat.name || cat.code }}</h2>
 
-          <!-- Category-level description -->
           <template v-if="cat.description">
             <p v-if="typeof cat.description === 'string'">{{ cat.description }}</p>
             <p v-else v-for="(line, i) in cat.description" :key="i">{{ line }}</p>
           </template>
 
-          <!-- Rule tree -->
           <div v-if="cat.rule">
             <RuleTree v-for="child in cat.rule" :key="child.code" :rule="child" />
           </div>
@@ -68,16 +68,6 @@ const languageOptions = [
   { code: '5.', name: '日文 ja' },
   { code: '6.', name: '法文 fr' },
 ]
-
-// Mobile detection via CSS — render both, CSS hides one
-const isMobile = ref(false)
-if (import.meta.client) {
-  const mq = window.matchMedia('(max-width: 1023px)')
-  isMobile.value = mq.matches
-  mq.addEventListener('change', (e) => {
-    isMobile.value = e.matches
-  })
-}
 
 function anchorId(code: string): string {
   return code.replace(/\.$/, '').replace(/\./g, '-')
