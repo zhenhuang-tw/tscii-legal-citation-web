@@ -1,0 +1,150 @@
+/* ========================================
+   main.css — Pico CSS class-less 覆寫
+   僅可使用元素選擇器、屬性選擇器及 CSS 自訂變數
+   ======================================== */
+
+body {
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ---- 非官方聲明 banner ---- */
+aside.disclaimer {
+  background: var(--pico-color-amber-100);
+  border-left: 4px solid var(--pico-color-amber-500);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* ---- CitationFormatBlock <mark> ---- */
+mark {
+  background: var(--pico-color-cyan-100);
+  color: var(--pico-color-cyan-800);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* ---- RuleTree 折疊 ---- */
+details rule-tree-container {
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+}
+
+details rule-tree-container > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.25rem 0;
+}
+
+details rule-tree-container[open] > summary {
+  margin-bottom: 0.5rem;
+}
+
+/* ---- 語言篩選工具列 ---- */
+fieldset.language-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 4px;
+}
+
+fieldset.language-filter legend {
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+
+/* ---- 大綱側欄（桌面版） ---- */
+@media (min-width: 1024px) {
+  .citations-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+nav[aria-label='頁面大綱'] {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+nav[aria-label='頁面大綱'] ol {
+  padding-left: 1.25rem;
+  margin: 0;
+  list-style: none;
+}
+
+nav[aria-label='頁面大綱'] li {
+  margin: 0.15rem 0;
+}
+
+nav[aria-label='頁面大綱'] a {
+  text-decoration: none;
+  display: block;
+  padding: 0.15rem 0.25rem;
+  border-radius: 3px;
+}
+
+nav[aria-label='頁面大綱'] a:hover {
+  background: var(--pico-muted-border-color);
+}
+
+/* 大綱：分類層級加粗 */
+nav[aria-label='頁面大綱'] li.toc-category > a {
+  font-weight: 700;
+}
+
+/* 大綱行動版折疊 */
+@media (max-width: 1023px) {
+  .citations-layout {
+    display: block;
+  }
+
+  nav[aria-label='頁面大綱'] {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* ---- CitationCard ---- */
+article.citation-card {
+  margin-bottom: 1.5rem;
+}
+
+article.citation-card > header h3 {
+  margin-bottom: 0.25rem;
+}
+
+article.citation-card blockquote {
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  background: var(--pico-code-background-color);
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* ---- 分類區塊 ---- */
+section.citation-category {
+  margin-bottom: 2.5rem;
+  padding-top: 1rem;
+}
+
+section.citation-category > h2 {
+  border-bottom: 2px solid var(--pico-muted-border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
