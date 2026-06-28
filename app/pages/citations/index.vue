@@ -45,9 +45,28 @@
             <p v-else v-for="(line, i) in cat.description" :key="i">{{ line }}</p>
           </template>
 
-          <div v-if="cat.rule">
-            <RuleTree v-for="child in cat.rule" :key="child.code" :rule="child" />
-          </div>
+          <!-- Level-2 rules -->
+          <template v-if="cat.rule">
+            <template v-for="child in cat.rule" :key="child.code">
+              <!-- Pure description: only code + description, no name -->
+              <p v-if="isPureDescription(child)" :id="anchorId(child.code)">
+                {{ child.code }}
+                <template v-if="Array.isArray(child.description)">
+                  <template v-for="(line, i) in child.description" :key="i">
+                    <!-- eslint-disable-next-line vue/no-v-html -->
+                    <span v-html="line" /><br v-if="i < child.description.length - 1" />
+                  </template>
+                </template>
+                <template v-else>
+                  <!-- eslint-disable-next-line vue/no-v-html -->
+                  <span v-html="child.description" />
+                </template>
+              </p>
+
+              <!-- Everything else: card -->
+              <CitationCard v-else :rule="child" />
+            </template>
+          </template>
         </section>
       </div>
     </div>
@@ -55,10 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import citationData from '~~/content/citation-style.json'
 import type { CitationRule } from '~/types/citation'
 
-const categories = citationData.rule as CitationRule[]
+const { data: citationData } = await useAsyncData('citation-style', () =>
+  queryCollection('citation_style').first(),
+)
+
+const categories = computed(() => (citationData.value?.rule ?? []) as CitationRule[])
 
 const filter = useLanguageFilter()
 
@@ -69,6 +91,10 @@ const languageOptions = [
   { code: '5.', name: '日文 ja' },
   { code: '6.', name: '法文 fr' },
 ]
+
+function isPureDescription(rule: CitationRule): boolean {
+  return !rule.name && !!rule.description
+}
 
 function anchorId(code: string): string {
   return code.replace(/\.$/, '').replace(/\./g, '-')

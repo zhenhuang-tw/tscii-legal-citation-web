@@ -40,44 +40,25 @@ mark {
   font-size: 0.9em;
 }
 
-/* ---- RuleTree ---- */
-div[data-rule-tree] {
+/* ---- CitationCard mobile wrapper ---- */
+details.citation-card-wrapper {
   margin-bottom: 1rem;
-}
-
-div[data-rule-tree] > h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-/* Desktop: leaf containers have no special styling */
-div[data-rule-leaf] {
-  margin-bottom: 0.5rem;
-}
-
-/* Mobile: details wrapper (collapsible) */
-details[data-rule-tree] {
-  margin-bottom: 0.75rem;
   border: 1px solid var(--pico-muted-border-color);
   border-radius: 4px;
   padding: 0.5rem 0.75rem;
 }
 
-details[data-rule-tree] > summary {
+details.citation-card-wrapper > summary {
   cursor: pointer;
   font-weight: 700;
   padding: 0.25rem 0;
-  color: var(--pico-h3-color);
 }
 
-details[data-rule-leaf] {
-  margin-bottom: 0.5rem;
-}
-
-details[data-rule-leaf] > summary {
-  cursor: pointer;
+/* ---- Level-4 sub-rules: slightly larger than body text ---- */
+h4 {
+  font-size: 1.1rem;
   font-weight: 600;
+  margin: 0.75rem 0 0.5rem;
 }
 
 /* ---- 語言篩選工具列 ---- */
