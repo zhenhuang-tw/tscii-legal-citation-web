@@ -11,18 +11,15 @@
         <h3>{{ rule.code }} {{ rule.name }}</h3>
       </header>
 
-      <p v-if="rule.description">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
+      <template v-if="rule.description">
+        <p
+          v-for="(line, i) in asDescriptionArray(rule.description)"
+          :key="i"
+        >
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
-      </p>
+          <span v-html="line" />
+        </p>
+      </template>
 
       <!-- Example: string / string[] -->
       <template v-if="typeof rule.example === 'string' || Array.isArray(rule.example)">
@@ -86,6 +83,10 @@ onMounted(() => {
 
 function anchorId(code: string): string {
   return code.replace(/\.$/, '').replace(/\./g, '-')
+}
+
+function asDescriptionArray(desc: string | string[]): string[] {
+  return Array.isArray(desc) ? desc : [desc]
 }
 
 function asArray(val: string | string[]): string[] {

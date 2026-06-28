@@ -49,19 +49,17 @@
           <template v-if="cat.rule">
             <template v-for="child in cat.rule" :key="child.code">
               <!-- Pure description: only code + description, no name -->
-              <p v-if="isPureDescription(child)" :id="anchorId(child.code)">
-                {{ child.code }}
-                <template v-if="Array.isArray(child.description)">
-                  <template v-for="(line, i) in child.description" :key="i">
-                    <!-- eslint-disable-next-line vue/no-v-html -->
-                    <span v-html="line" /><br v-if="i < child.description.length - 1" />
-                  </template>
-                </template>
-                <template v-else>
+              <template v-if="isPureDescription(child)">
+                <p
+                  v-for="(line, i) in asDescriptionArray(child.description)"
+                  :key="i"
+                  :id="i === 0 ? anchorId(child.code) : undefined"
+                >
+                  {{ child.code }}
                   <!-- eslint-disable-next-line vue/no-v-html -->
-                  <span v-html="child.description" />
-                </template>
-              </p>
+                  <span v-html="line" />
+                </p>
+              </template>
 
               <!-- Everything else: card -->
               <CitationCard v-else :rule="child" />
@@ -94,6 +92,11 @@ const languageOptions = [
 
 function isPureDescription(rule: CitationRule): boolean {
   return !rule.name && !!rule.description
+}
+
+function asDescriptionArray(desc: string | string[] | undefined): string[] {
+  if (!desc) return []
+  return Array.isArray(desc) ? desc : [desc]
 }
 
 function anchorId(code: string): string {

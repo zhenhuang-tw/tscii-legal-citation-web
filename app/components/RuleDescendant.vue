@@ -1,19 +1,17 @@
 <template>
   <div>
     <!-- Pure description (no name, only description) -->
-    <p v-if="isPureDesc" :id="anchorId(rule.code)">
-      {{ rule.code }}
-      <template v-if="Array.isArray(rule.description)">
-        <template v-for="(line, i) in rule.description" :key="i">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-        </template>
-      </template>
-      <template v-else>
+    <template v-if="isPureDesc">
+      <p
+        v-for="(line, i) in asDescriptionArray(rule.description)"
+        :key="i"
+        :id="i === 0 ? anchorId(rule.code) : undefined"
+      >
+        {{ rule.code }}
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="rule.description" />
-      </template>
-    </p>
+        <span v-html="line" />
+      </p>
+    </template>
 
     <!-- Named rule -->
     <template v-else>
@@ -21,17 +19,12 @@
         {{ rule.code }} {{ rule.name }}
       </component>
 
-      <p v-if="rule.description">
-        <template v-if="Array.isArray(rule.description)">
-          <template v-for="(line, i) in rule.description" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
-          </template>
-        </template>
-        <template v-else>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="rule.description" />
-        </template>
+      <p
+        v-for="(line, i) in asDescriptionArray(rule.description)"
+        :key="i"
+      >
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="line" />
       </p>
 
       <!-- Example: string / string[] -->
@@ -80,5 +73,10 @@ function anchorId(code: string): string {
 
 function asArray(val: string | string[]): string[] {
   return Array.isArray(val) ? val : [val]
+}
+
+function asDescriptionArray(desc: string | string[] | undefined): string[] {
+  if (!desc) return []
+  return Array.isArray(desc) ? desc : [desc]
 }
 </script>
