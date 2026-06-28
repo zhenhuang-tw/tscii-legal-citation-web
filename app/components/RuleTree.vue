@@ -1,7 +1,7 @@
 <template>
   <!-- ===== DESKTOP: no collapse ===== -->
   <template v-if="!isMobile">
-    <!-- x.x rule (non-pure-description) → CitationCard; sub-rules go into the card's slot -->
+    <!-- x.x rule (non-pure-description) → CitationCard; sub-rules in slot -->
     <div v-if="isXx(rule.code) && !insideCard && !isPureDescription(rule)" :id="anchorId(rule.code)">
       <CitationCard :rule="rule">
         <RuleTree
@@ -13,16 +13,20 @@
       </CitationCard>
     </div>
 
-    <!-- Non-x.x container, pure-desc x.x, or inside-card: just render children -->
+    <!-- Non-x.x container, pure-desc x.x, or inside-card: render children -->
     <div v-else-if="rule.rule" :id="anchorId(rule.code)" data-rule-tree>
       <h3 v-if="!insideCard">{{ rule.code }} {{ rule.name }}</h3>
       <p v-if="rule.description && rule.rule">
         <template v-if="Array.isArray(rule.description)">
           <template v-for="(line, i) in rule.description" :key="i">
-            {{ line }}<br v-if="i < rule.description.length - 1" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
           </template>
         </template>
-        <template v-else>{{ rule.description }}</template>
+        <template v-else>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="rule.description" />
+        </template>
       </p>
       <RuleTree
         v-for="child in rule.rule"
@@ -38,12 +42,16 @@
       <p v-if="rule.description">
         <template v-if="Array.isArray(rule.description)">
           <template v-for="(line, i) in rule.description" :key="i">
-            {{ line }}<br v-if="i < rule.description.length - 1" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
           </template>
         </template>
-        <template v-else>{{ rule.description }}</template>
+        <template v-else>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="rule.description" />
+        </template>
       </p>
-      <blockquote v-if="rule.format">
+      <blockquote v-if="rule.format && !rule.description">
         <template v-if="Array.isArray(rule.format)">
           <p v-for="(f, i) in rule.format" :key="i">
             <CitationFormatBlock :format="f" />
@@ -53,6 +61,32 @@
           <CitationFormatBlock :format="rule.format" />
         </template>
       </blockquote>
+      <!-- Inline examples -->
+      <ul v-if="Array.isArray(rule.example)">
+        <li v-for="(ex, i) in rule.example" :key="i">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="ex" />
+        </li>
+      </ul>
+      <blockquote v-else-if="typeof rule.example === 'string'">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="rule.example" />
+      </blockquote>
+      <template v-else-if="typeof rule.example === 'object'">
+        <div v-for="(val, key) in rule.example" :key="key">
+          <strong>{{ key }}</strong>
+          <blockquote v-if="typeof val === 'string'">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="val" />
+          </blockquote>
+          <ul v-else-if="Array.isArray(val)">
+            <li v-for="(ex, j) in val" :key="j">
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <span v-html="ex" />
+            </li>
+          </ul>
+        </div>
+      </template>
     </div>
 
     <!-- Pure description -->
@@ -60,16 +94,20 @@
       {{ rule.code }}
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
-          {{ line }}<br v-if="i < rule.description.length - 1" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="line" /><br v-if="i < rule.description.length - 1" />
         </template>
       </template>
-      <template v-else>{{ rule.description }}</template>
+      <template v-else>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="rule.description" />
+      </template>
     </p>
   </template>
 
   <!-- ===== MOBILE: collapsible ===== -->
   <template v-else>
-    <!-- x.x rule (non-pure-description) → CitationCard in details; sub-rules in card slot -->
+    <!-- x.x rule (non-pure-description) → CitationCard in details -->
     <details v-if="isXx(rule.code) && !insideCard && !isPureDescription(rule)" :id="anchorId(rule.code)">
       <summary>{{ rule.code }} {{ rule.name }}</summary>
       <CitationCard :rule="rule">
@@ -88,10 +126,14 @@
       <p v-if="rule.description && rule.rule">
         <template v-if="Array.isArray(rule.description)">
           <template v-for="(line, i) in rule.description" :key="i">
-            {{ line }}<br v-if="i < rule.description.length - 1" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
           </template>
         </template>
-        <template v-else>{{ rule.description }}</template>
+        <template v-else>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="rule.description" />
+        </template>
       </p>
       <RuleTree
         v-for="child in rule.rule"
@@ -108,12 +150,16 @@
       <p v-if="rule.description">
         <template v-if="Array.isArray(rule.description)">
           <template v-for="(line, i) in rule.description" :key="i">
-            {{ line }}<br v-if="i < rule.description.length - 1" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="line" /><br v-if="i < rule.description.length - 1" />
           </template>
         </template>
-        <template v-else>{{ rule.description }}</template>
+        <template v-else>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="rule.description" />
+        </template>
       </p>
-      <blockquote v-if="rule.format">
+      <blockquote v-if="rule.format && !rule.description">
         <template v-if="Array.isArray(rule.format)">
           <p v-for="(f, i) in rule.format" :key="i">
             <CitationFormatBlock :format="f" />
@@ -123,6 +169,32 @@
           <CitationFormatBlock :format="rule.format" />
         </template>
       </blockquote>
+      <!-- Inline examples -->
+      <ul v-if="Array.isArray(rule.example)">
+        <li v-for="(ex, i) in rule.example" :key="i">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="ex" />
+        </li>
+      </ul>
+      <blockquote v-else-if="typeof rule.example === 'string'">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="rule.example" />
+      </blockquote>
+      <template v-else-if="typeof rule.example === 'object'">
+        <div v-for="(val, key) in rule.example" :key="key">
+          <strong>{{ key }}</strong>
+          <blockquote v-if="typeof val === 'string'">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="val" />
+          </blockquote>
+          <ul v-else-if="Array.isArray(val)">
+            <li v-for="(ex, j) in val" :key="j">
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <span v-html="ex" />
+            </li>
+          </ul>
+        </div>
+      </template>
     </details>
 
     <!-- Pure description -->
@@ -130,10 +202,14 @@
       {{ rule.code }}
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
-          {{ line }}<br v-if="i < rule.description.length - 1" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="line" /><br v-if="i < rule.description.length - 1" />
         </template>
       </template>
-      <template v-else>{{ rule.description }}</template>
+      <template v-else>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="rule.description" />
+      </template>
     </p>
   </template>
 </template>

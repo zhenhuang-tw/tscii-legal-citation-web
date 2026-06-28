@@ -8,14 +8,18 @@
     <p v-if="rule.description">
       <template v-if="Array.isArray(rule.description)">
         <template v-for="(line, i) in rule.description" :key="i">
-          {{ line }}<br v-if="i < rule.description.length - 1" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="line" /><br v-if="i < rule.description.length - 1" />
         </template>
       </template>
-      <template v-else>{{ rule.description }}</template>
+      <template v-else>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="rule.description" />
+      </template>
     </p>
 
-    <!-- Format template -->
-    <blockquote v-if="rule.format">
+    <!-- Format template (only when description is absent) -->
+    <blockquote v-if="rule.format && !rule.description">
       <template v-if="Array.isArray(rule.format)">
         <p v-for="(f, i) in rule.format" :key="i">
           <CitationFormatBlock :format="f" />
@@ -26,8 +30,8 @@
       </template>
     </blockquote>
 
-    <!-- Examples -->
-    <section v-if="hasExamples">
+    <!-- Examples: rule.example only (not multipleTypeExample) -->
+    <section v-if="rule.example !== undefined">
       <h4>範例</h4>
       <ul v-if="Array.isArray(rule.example)">
         <li v-for="(ex, i) in rule.example" :key="i">
@@ -37,6 +41,7 @@
       </ul>
       <ul v-else-if="typeof rule.example === 'string'">
         <li>
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="rule.example" />
         </li>
       </ul>
@@ -57,7 +62,7 @@
       </template>
     </section>
 
-    <!-- Multiple type examples -->
+    <!-- Multiple type examples (separate heading) -->
     <section v-if="rule.multipleTypeExample && rule.multipleTypeExample.length > 0">
       <h4>範例</h4>
       <template v-for="(group, gi) in rule.multipleTypeExample" :key="gi">
@@ -81,12 +86,5 @@
 <script setup lang="ts">
 import type { CitationRule } from '~/types/citation'
 
-const props = defineProps<{ rule: CitationRule }>()
-
-const hasExamples = computed(() => {
-  return (
-    props.rule.example !== undefined ||
-    (props.rule.multipleTypeExample && props.rule.multipleTypeExample.length > 0)
-  )
-})
+defineProps<{ rule: CitationRule }>()
 </script>
