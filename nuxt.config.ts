@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const ASSET_BASE_URL = 'https://assets.zhenhuang.tw/tscii-legal-citation'
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-06-28',
   future: { compatibilityVersion: 4 },
@@ -18,6 +21,35 @@ export default defineNuxtConfig({
         },
       ],
       title: 'TSCII 法律學一級期刊統一引註格式',
+      link: [
+        {
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: `${ASSET_BASE_URL}/apple-touch-icon.png`,
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: `${ASSET_BASE_URL}/favicon-32x32.png`,
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '16x16',
+          href: `${ASSET_BASE_URL}/favicon-16x16.png`,
+        },
+        {
+          rel: 'manifest',
+          href: `${ASSET_BASE_URL}/site.webmanifest`,
+        },
+      ],
+    },
+  },
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/robots.txt', '/citations'],
     },
   },
 })
