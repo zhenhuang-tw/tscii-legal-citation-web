@@ -19,13 +19,13 @@
     <div class="citations-layout">
       <!-- Desktop TOC: visible sidebar -->
       <div class="toc-desktop">
-        <CitationToc :rules="categories" :language-filter="filter" />
+        <CitationToc :rules="categories" :language-filter="filter" :active-codes="activeCategoryCodes" />
       </div>
 
       <!-- Mobile TOC: details/summary wrapper -->
       <details class="toc-mobile">
         <summary>目錄</summary>
-        <CitationToc :rules="categories" :language-filter="filter" />
+        <CitationToc :rules="categories" :language-filter="filter" :active-codes="activeCategoryCodes" />
       </details>
 
       <!-- Main content -->
@@ -35,6 +35,7 @@
           v-show="filter.isVisible(cat.code)"
           :key="cat.code"
           :id="anchorId(cat.code)"
+          :data-code="cat.code"
           class="citation-category"
         >
           <h2>{{ cat.code }} {{ cat.name || '' }}</h2>
@@ -72,4 +73,34 @@ const languageOptions = [
 function anchorId(code: string): string {
   return code.replace(/\.$/, '').replace(/\./g, '-')
 }
+
+// Lazy TOC: track which category sections are currently in view
+// null = observer not yet fired (initial state, show nothing)
+const activeCategoryCodes = ref<string[] | null>(null)
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      const codes = new Set(activeCategoryCodes.value ?? [])
+      for (const entry of entries) {
+        const code = (entry.target as HTMLElement).dataset.code
+        if (!code) continue
+        if (entry.isIntersecting) {
+          codes.add(code)
+        } else {
+          codes.delete(code)
+        }
+      }
+      activeCategoryCodes.value = Array.from(codes)
+    },
+    { rootMargin: '0px 0px -60% 0px' },
+  )
+
+  document.querySelectorAll('.citation-category').forEach((el) => observer!.observe(el))
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
 </script>
