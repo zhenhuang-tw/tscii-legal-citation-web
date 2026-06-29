@@ -61,10 +61,15 @@ export default defineNuxtConfig({
       {
         name: 'Gentium Book Basic',
         provider: 'bunny',
-        // 明確指定您會用到的粗體與斜體組合
         weights: [400, 700],
         styles: ['normal', 'italic'],
       },
+      {
+        name: 'Noto Serif TC',
+        provider: 'bunny',
+        weights: [500, 700],
+        styles: ['normal'],
+      }
     ],
   },
 })
