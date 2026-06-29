@@ -25,7 +25,7 @@
       <template v-if="typeof rule.example === 'string' || Array.isArray(rule.example)">
         <blockquote v-for="(ex, i) in asArray(rule.example)" :key="i">
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="ex" />
+          <span v-html="ex" class="rule-example" />
         </blockquote>
       </template>
 
@@ -35,7 +35,7 @@
           <strong>{{ key }}</strong>
           <blockquote v-for="(ex, j) in asArray(val as string | string[])" :key="j">
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="ex" />
+            <span v-html="ex" class="rule-example" />
           </blockquote>
         </div>
       </template>
@@ -47,7 +47,7 @@
           <strong>{{ group.type }}</strong>
           <blockquote v-for="(ex, ei) in group.example" :key="ei">
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="ex" />
+            <span v-html="ex" class="rule-example" />
           </blockquote>
         </template>
       </template>
