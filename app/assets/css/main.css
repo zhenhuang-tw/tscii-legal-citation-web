@@ -17,6 +17,10 @@ span.italic {
   font-style: italic;
 }
 
+span.rule-example {
+  font-family: 'Gentium Book Basic', serif;
+}
+
 /* ---- AppHeader sticky ---- */
 header[data-sticky] {
   position: sticky;
