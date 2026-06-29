@@ -45,7 +45,7 @@
         <h4>範例</h4>
         <template v-for="(group, gi) in rule.multipleTypeExample" :key="gi">
           <strong>{{ group.type }}</strong>
-          <blockquote v-for="(ex, ei) in group.example" :key="ei">
+          <blockquote v-for="(ex, ei) in asArray(group.example)" :key="ei">
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="ex" class="rule-example" />
           </blockquote>

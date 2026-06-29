@@ -1,6 +1,6 @@
 export interface MultipleTypeExample {
   type: string
-  example: string[]
+  example: string | string[]
 }
 
 export interface CitationRule {
