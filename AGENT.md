@@ -1,4 +1,4 @@
-# AGENT.md — TSCII Legal Citation Web
+# AGENT.md — TSSCI Legal Citation Web Viewer
 
 > 本文件記錄本專案的開發規範、架構決策與維護注意事項。  
 > 內容為長期有效資訊，不包含一次性任務或需求細節。
@@ -27,9 +27,7 @@ app/
 │   ├── AppHeader.vue / AppFooter.vue   # 全站 shell（含非官方聲明）
 │   ├── ThemeToggle.vue                 # 亮/暗切換（SVG icon，無 emoji）
 │   ├── CitationCard.vue               # 顯示 citation style 規則的卡片
-│   ├── CitationFormatBlock.vue        # {$var} → <mark> highlight
-│   ├── CitationToc.vue / TocItem.vue  # 大綱側欄（巢狀 <ol>）
-│   └── RuleTree.vue                   # 遞迴 <details> 折疊樹
+│   └── CitationToc.vue / TocItem.vue  # 大綱側欄（巢狀 <ol>）
 ├── composables/
 │   ├── useTheme.ts             # 主題（localStorage + auto + FOUC 防止）
 │   └── useLanguageFilter.ts    # 語言篩選（localStorage，通則永遠顯示）
@@ -77,17 +75,6 @@ interface CitationRule {
 }
 ```
 
-### 節點類型識別
-
-| 類型 | 判斷條件 | 渲染方式 |
-|------|---------|---------|
-| 分類容器 | `code` 為 `"1"` 或 `"N."` 格式，有 `name` + `rule` | 渲染 `<section>` + `<h2>` + 遞迴 RuleTree |
-| 群組容器 | 有 `rule[]`，可選 `description` | `<details>` + `<summary>` + 遞迴 |
-| 純描述規則 | 僅 `code` + `description`，無 `name` | `<p>` 或 `<li>` |
-| 格式規則 | 有 `format` + `example` | `CitationCard` |
-
----
-
 ## 架構決策
 
 ### 1. 單頁引註瀏覽
@@ -98,9 +85,9 @@ interface CitationRule {
 
 `useLanguageFilter` composable 管理勾選狀態，`localStorage` key 為 `'citation-languages'`。`code: "1"`（通則）**永遠顯示**，不受篩選影響。
 
-### 3. 遞迴 RuleTree + 折疊
+### 3. 遞迴 + 折疊
 
-`RuleTree.vue` 遞迴走訪 `rule[]`：容器節點以 `<details>` 渲染（**預設收合**），葉節點以 `CitationCard` 渲染。不預先展開任何層級，除了那些僅是簡單說明的純描述規則外。
+遞迴走訪 `rule[]` 容器。
 
 ### 4. Pico CSS class-less 原則
 
@@ -138,7 +125,7 @@ Component template 中的 class 僅為語義標記，不應在 `main.css` 中被
 
 部分規則（如英文文獻 3.3.3）有兩種引用格式，`format` 為 `string[]`。
 
-### 不要使用 format 作為唯一說明
+### 不要在前端網頁使用 format
 
 `description` 是官方【格式】的完整文字；`format` 僅在適合 machine-readable 時才存在，作為未來建立 `.csl` 檔案時參考。使用者看到的格式說明應來自 `description`。
 
@@ -172,4 +159,4 @@ Component template 中的 class 僅為語義標記，不應在 `main.css` 中被
 
 ### Commit 規範
 
-使用 Conventional Commits：`type(scope): description`。常用 type：`feat`、`fix`、`chore`、`docs`。Scope 範例：`a11y`、`citations`、`composables`、`theme`。
+使用 Conventional Commits：`type(scope): description`。常用 type：`feat`、`fix`、`chore`、`docs`。Scope 範例：`a11y`、`ui`、`citation-style`、`composables`、`theme`。
